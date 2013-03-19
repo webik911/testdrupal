@@ -13,12 +13,12 @@ function contacts_page_form($form, &$form_state){
     '#title' => t('Contact settings'),
     '#children' => t('Feedback form connection'),
     //'#collapsible' => FALSE,
-    '#collapsed' => TRUE,
+    '#collapsed' => 'TRUE',
   );
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
-    '#required' => true
+    '#required' => 'true',
   );
   $form['surname'] = array(
     '#type' => 'textfield',
@@ -27,12 +27,12 @@ function contacts_page_form($form, &$form_state){
   $form['login'] = array(
     '#type' => 'textfield',
     '#title' => t('Login'),
-    '#required' => true
+    '#required' => 'true',
   );
   $form['email'] = array(
     '#type' => 'textfield',
     '#title' => t('Email'),
-    '#required' => true
+    '#required' => 'true',
   );
   $form['phone_number'] = array(
     '#type' => 'textfield',
@@ -42,7 +42,7 @@ function contacts_page_form($form, &$form_state){
     '#type' => 'radios',
     '#title' => t('Your floor'),
     '#options' => array(0 => t('Man'), 1 => t('Woman')),
-    '#required' => true
+    '#required' => 'true',
   );
   $form['nation'] = array(
       '#type' => 'select',
@@ -53,18 +53,18 @@ function contacts_page_form($form, &$form_state){
         3 => t('USA'),
       ),
       '#default_value' => variable_get('nation_range', 3),
-      '#required' => true
+      '#required' => 'true',
     );
   $form['massege'] = array(
     '#type' => 'textarea',
     '#title' => t('Massege'),
-    '#required' => true
+    '#required' => 'true',
   );
   $form['agree'] = array(
     '#type' => 'checkboxes',
     //'#title' => t('Accept the rules'),
     '#options' => drupal_map_assoc(array(t('Accept the rules'))),
-    '#required' => true
+    '#required' => 'true',
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -79,7 +79,7 @@ function contacts_page_form_alter(&$form, &$form_state, $form_id) {
     $form['skype'] = array(
       '#type' => 'textfield',
       '#title' => t('Skype'),
-      '#required' => true,
+      '#required' => 'true',
     );
   }
 }
@@ -94,58 +94,6 @@ function page_example() {
       $form = drupal_get_form('contacts_page_form');
       break;
     case 'thank':
-  // створюємо $header, де знаходиться масив, що означає рядок, 
-  // клітинки мають наступний вміст 
-  $header_table_edit = array(  
-    // перша клітинка вміщує текст 'Title'  
-    array('data' => t('Title')),  
-    // друга клітинка має текст 'Link to edit' 
-    array('data' => t('Actions')) 
-  ); 
-  // робимо запит до БД, де вибираємо номер нод і їх назви з таблиці node
-  $query = db_select('node', 'n') 
-    ->fields('n', array('nid', 'title')) 
-    ->execute() 
-    ->fetchAll();  
-  //виводимо всі наші дані в конструкції foreach  
-  foreach ($query as $record_edit_table) { 
-    //виводимо рядок, який вміщує 
-    $rows_table_edit[] =  
-      // клітинки 
-      array(  
-        // в першій клітинці знаходиться запис  
-        array(   
-          // в клітиці знаходиться запис посилання, де назва ноди виводиться
-          // з допомогою $record_table_edit -> title, саме посилання буде мати такий вигляд  
-          // «'node/' . $record_table_edit -> nid» - тобто ми будемо переходити на адресу типу:  
-          // «наш_сайт/node/'номер ноды'» 
-          'data' => l($record_table_edit -> title, 'node/' . $record_table_edit -> nid) 
-        ), 
-        // друга клітинка має запис посилання  
-        array(  
-           // посилання буде з значенням 'edit node', при натисканні на неї ми будемо переходити         //  на адреус типу: «наш_сайт / node / номер_ноды / edit»
-          'data' => l(t('edit node'), 'node/'  . $record_table_edit -> nid  .  '/edit') 
-        ) 
-    );  
-  } 
-  // створюємо $caption з рядковим значенням 'Table for edit nodes'
-  $caption_table_edit = t('Table for edit nodes'); 
-  // створюємо  функцію theme, яка має значення 'table' та виводить
-  return theme('table',   
-      array( 
-               // шапка таблиці знаходиться в $header_edit_table
-              'header' => $header_table_edit,   
-              // тіло таблиці  $rows_edit_table 
-              'rows'     => $rows_table_edit,   
-              // і заголовок таблиці буде $caption_edit_table
-              'caption' => $caption_table_edit
-            ) 
-  );
-
-
-
-
-
       $form = t('Thank You!');
       break;
   }
@@ -198,13 +146,13 @@ function contacts_page_menu() {
     'description' => 'contacts site',
     'page callback' => 'page_example',
     'page arguments' => array('TRUE'),
-    'access callback' => TRUE,
-    'expanded' => TRUE,
+    'access callback' => 'true',
+    'expanded' => 'TRUE',
   );
   $items['thank'] = array(
     'title' => 'Thank You!',
     'page callback' => 'page_example',
-    'access callback' => TRUE,
+    'access callback' => 'TRUE',
   );
 
   return $items;
