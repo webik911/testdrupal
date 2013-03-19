@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ * Example module page 403.
+ */
+
+ /**
+  * Implements error_403().
+  */
+function error_403() {
+  $content = t('access denied');
+
+  return $content;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function error_403_menu() {
+
+  $items = array();
+
+  $items['page403'] = array(
+    'title' => 'Page 403',
+    'description' => 'Page 403',
+    'page callback' => 'error_403',
+    'access callback' => TRUE,
+    'expanded' => TRUE,
+  );
+
+  return $items;
+}

@@ -1,0 +1,110 @@
+<?php
+/**
+ * @file
+ * Example module my_theming.
+ */
+
+/**
+ * Implements page_example().
+ */
+function my_page_example() {
+  $items = array(
+    t('list'),
+  );
+  $my_list = theme('item_list', array('items' => $my_list));
+  return $my_list;
+}
+
+/**
+ * Implements page_example().
+ */
+function my_fieldset_example() {
+  $params = array(
+    'path' => 'public://sites/all/modules/my_theming/images/195334.jpg',
+    'width' => '300px',
+    'height' => '500px'
+  );
+
+  $my_images = theme('image_style', $params);
+
+  $title = t('Title list');
+
+  $list = array();
+  $list[] = t('Aliquam rutrum laoreet sapien, sed hendrerit leo pellentesque id.');
+  $list[] = t('Proin quis sapien sit amet diam consequat scelerisque.');
+  $list[] = t('Vivamus vel purus et nunc venenatis posuere.');
+
+  $my_list = theme('item_list', array('items' => $list, 'title' => $title));
+
+  $header = array( 
+    array('data' => t('Movies')),
+    array('data' => t('Soaps')),
+    array('data' => t('Cartoons'))
+  );
+  $rows[] = array(
+    array('data' => t('Cheerful')),
+    array('data' => t('Cheerful')),
+    array('data' => t('Cheerful'))
+  );
+  $rows[] = array(
+    array('data' => t('Scary')),
+    array('data' => t('Scary')),
+    array('data' => t('Scary'))
+  );
+  $rows[] = array(
+    array('data' => t('Dynamic')),
+    array('data' => t('Dynamic')),
+    array('data' => t('Dynamic'))
+  );
+  $rows[] = array(
+    array('data' => t('For the soul')),
+    array('data' => t('For the soul')),
+    array('data' => t('For the soul'))
+  );
+
+  $my_table = theme('table', array('header' => $header, 'rows'=> $rows));
+
+  drupal_add_library('system', 'drupal.collapse');
+  $my_text = array(
+    '#title' => t('List'),
+    '#children' => $my_list,
+    '#collapsible' => true,
+    '#collapsed'  => true,
+    '#attributes'  => array(
+      'class' => array('collapsible', 'collapsed')
+    ),
+  );
+  $fieldset_text = theme('fieldset', array('element' => $my_text));
+
+  $fieldset_element = array(
+    '#title' => t('Table genres'),
+    '#children' => $my_table,
+    '#collapsible' => true,
+    '#collapsed' => true,
+    '#attributes' => array(
+    'class' => array('collapsible', 'collapsed')
+    ),
+  );
+  $fieldset_table = theme('fieldset', array('element' => $fieldset_element));
+
+  return "$fieldset_text" . "$fieldset_table " . "$my_images";
+}
+
+/**
+ * Implements hook_menu().
+ */
+function my_theming_menu() {
+
+  $items = array();
+
+  $items['theming'] = array(
+    'title' => 'Home page',
+    'description' => 'home site',
+    'page callback' => 'my_fieldset_example',
+    'page arguments' => array('TRUE'),
+    'access callback' => TRUE,
+    'expanded' => TRUE,
+  );
+
+  return $items;
+}

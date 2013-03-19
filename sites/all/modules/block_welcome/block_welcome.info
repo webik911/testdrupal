@@ -1,0 +1,5 @@
+name = Block greeting
+description = Block greeting
+version = 7.x-dev
+core = 7.x
+package = My module

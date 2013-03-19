@@ -1,0 +1,8 @@
+name = Database
+description = Insert database
+version = 7.x-dev
+core = 7.x
+package = My module
+
+files[] = my_database.module
+files[] = my_database.install

@@ -1,0 +1,5 @@
+name = Page 403
+description = This page is displayed when the requested document is denied to the current user. Leave blank to display a generic "access denied" page.
+version = 7.x-dev
+core = 7.x
+package = My module

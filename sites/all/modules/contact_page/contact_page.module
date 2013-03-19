@@ -1,0 +1,33 @@
+<?php
+/**
+ * @file
+ * Example module comtacts_page.
+ */
+
+/**
+ * Implements contacts_example().
+ */
+function contact_example() {
+  $content = t("Hello World!");
+
+  return $content;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function contact_page_menu() {
+
+  $items = array();
+
+  $items['contact'] = array(
+    'title' => 'Contact page',
+    'description' => 'contacts site',
+    'page callback' => 'contacts_example',
+    'page arguments' => array('tcompactmenu_settings'),
+    'access callback' => TRUE,
+    'expanded' => TRUE,
+  );
+
+  return $items;
+}

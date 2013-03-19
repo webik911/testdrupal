@@ -1,0 +1,17 @@
+<?php
+/**
+ * @file
+ * Example module block_welcome.
+ */
+
+function test_block_node_deleted($node) {
+  drupal_set_message(t('An error occurred and processing did not complete.'));
+}
+
+function test_block_node_update($node) {
+  drupal_set_message(t('Node update.'), 'error');
+}
+
+function test_block_node_insert($node) {
+  drupal_set_message(t('Node insert.'), 'error');
+}

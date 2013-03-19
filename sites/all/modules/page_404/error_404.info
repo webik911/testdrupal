@@ -1,0 +1,5 @@
+name = Page 404
+description = This page is displayed when no other content matches the requested document. Leave blank to display a generic "page not found" page.
+version = 7.x-dev
+core = 7.x
+package = My module

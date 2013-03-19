@@ -1,0 +1,224 @@
+<?php
+/**
+ * @file
+ * Example module my_database.
+ */
+
+/**
+ * Implements my_database_form().
+ */
+function my_database_form($form, &$form_state) {
+  if (isset($_GET['id'])) {
+    $result = db_select('custom_table', 'c')
+    ->fields('c', array('number', 'teaser', 'text'))
+    ->condition('c.id', $_GET['id'])
+    ->execute()
+    ->fetchAssoc();
+  }
+  if (isset($result)) {
+    $submit = 'edit';
+  }
+  else {
+    $result['number'] = '';
+    $result['teaser'] = '';
+    $result['text'] = '';
+    $submit = 'submit';
+  }
+  $form['number'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number'),
+    '#required' => 'true',
+    '#default_value' => $result['number'],
+  );
+  $form['teaser'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Teaser'),
+    '#required' => 'true',
+    '#default_value' => $result['teaser'],
+  );
+  $form['text'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Text'),
+    '#required' => 'true',
+    '#default_value' => $result['text'],
+  );
+  $form[$submit] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  return $form;
+}
+
+/**
+ * Implements delete_form().
+ */
+function delete_form() {
+  $form['massege'] = array(
+    '#type' => 'fieldset',
+    '#children' => t('This action cannot be undone.'),
+    //'#collapsible' => FALSE,
+    '#collapsed' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete'),
+  );
+  $form['from'] = array(
+    '#type' => 'item',
+    '#markup' => l(t('Cancel'), 'view_data'),
+  );
+
+  return $form;
+}
+
+/**
+ * Implements delete_form_submit().
+ */
+function delete_form_submit($form, &$form_state) {
+  if ($form_state['values']['submit']) {
+    $num_deleted = db_delete('custom_table')
+      ->condition('id', $_GET['id'])
+      ->execute();
+    if ($num_deleted) {
+      $form_state['redirect'] = 'view_data';
+      drupal_set_message(t('Data removed.'));
+    }
+  }
+}
+
+/**
+ * Implements page_example().
+ */
+function my_database_example() {
+  $page = arg();
+  if (isset($page[1]) && isset($page[2])) {
+    $page[0] = $page[0] . '/' . $page[1] . '/' . $page[2];
+  }
+  switch ($page[0]) {
+    case 'save_data':
+      $form = drupal_get_form('my_database_form');
+      break;
+
+    case 'view_data':
+      $header_table_link = array(
+        array('data' => t('Title')),
+        array('data' => t('Actions')),
+      );
+      $query = db_select('custom_table', 'c')
+        ->fields('c', array('id', 'teaser'))
+        ->execute()
+        ->fetchAll();
+      foreach ($query as $record_table_link) {
+        $id = $record_table_link->id;
+        $link_edit = 'my_data/' . $id . '/edit';
+        $link_del = 'my_data/' . $id . '/delete';
+        $rows_table_link[] = array(
+          array(
+            'data' => l($record_table_link->teaser, 'my_data/' . $id),
+          ),
+          array(
+            'data' => l(t('edit'), $link_edit, array(
+              'query' => array(
+                'id' => $id,
+                'action' => 'edit',
+              ),
+            )) . ' or ' . l(t('delete'), $link_del, array(
+              'query' => array(
+                'id' => $id,
+                'action' => 'delete',
+              ),
+            )),
+          ),
+        );
+      }
+      $caption_table = t('Table for edit and delete data');
+      $form = theme('table',
+        array(
+          'header' => $header_table_link,
+          'rows' => $rows_table_link,
+          'caption' => $caption_table,
+        )
+      );
+      break;
+
+    case 'my_data/' . $page[1] . '/' . $page[2]:
+      if ($page[2] == 'delete') {
+        $form = drupal_get_form('delete_form');
+      }
+      elseif ($page[2] == 'edit') {
+        $form = drupal_get_form('my_database_form');
+      }
+      break;
+  }
+
+  return $form;
+}
+
+/**
+ * Implements _validate().
+ */
+function my_database_form_validate($form, &$form_state) {
+  if ($form_state['values']['teaser'] > 150) {
+    form_error($form, t("Сharacters in the box teaser more than 150."));
+  }
+  if (!is_numeric($form_state['values']['number'])) {
+    form_error($form, t("Number incorrect."));
+  }
+}
+
+/**
+ * Implements _submit().
+ */
+function my_database_form_submit($form, &$form_state) {
+  if (isset($form_state['values']['submit'])) {
+    $id = db_insert('custom_table')
+      ->fields(array(
+          'number' => $form_state['values']['number'],
+          'teaser' => $form_state['values']['teaser'],
+          'text' => $form_state['values']['text'],
+      ))
+      ->execute();
+    if ($id) {
+      drupal_set_message(t('Data sent successfully.'));
+    }
+  }
+  elseif ($form_state['values']['edit']) {
+    $num_updated = db_update('custom_table')
+      ->fields(array(
+        'number' => $form_state['values']['number'],
+        'teaser' => $form_state['values']['teaser'],
+        'text' => $form_state['values']['text'],
+      ))
+      ->condition('id', $_GET['id'])
+      ->execute();
+    if ($num_updated) {
+      drupal_set_message(t('Data updated.'));
+      $form_state['redirect'] = 'view_data';
+    }
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function my_database_menu() {
+  $items = array();
+  $items['save_data'] = array(
+    'title' => t('Save data'),
+    'page callback' => 'my_database_example',
+    'access callback' => TRUE,
+  );
+  $items['view_data'] = array(
+    'title' => t('View data'),
+    'page callback' => 'my_database_example',
+    'access callback' => TRUE,
+  );
+  $items['my_data/%/%'] = array(
+    'title' => t('Delete data'),
+    'page callback' => 'my_database_example',
+    'access callback' => TRUE,
+  );
+
+  return $items;
+}

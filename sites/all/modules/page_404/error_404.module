@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ * Example module home_page.
+ */
+
+/**
+ * Implements error_404().
+ */
+function error_404() {
+  $content = t('page not found');
+
+  return $content;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function error_404_menu() {
+
+  $items = array();
+
+  $items['page404'] = array(
+    'title' => 'Page 404',
+    'description' => 'Page 404',
+    'page callback' => 'error_404',
+    'access callback' => TRUE,
+    'expanded' => TRUE,
+  );
+
+  return $items;
+}

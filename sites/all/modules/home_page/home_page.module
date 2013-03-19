@@ -1,0 +1,83 @@
+<?php
+/**
+ * @file
+ * Example module home_page.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function home_page_init() {
+  drupal_set_message(t('Hello World!'));
+}
+
+/**
+ * Implements _page_example().
+ */
+function _page_example() {
+  $content = t("Hello World!");
+
+  return $content;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function home_page_menu() {
+
+  $items = array();
+
+  $items['home'] = array(
+    'title' => 'Home page',
+    'description' => 'home site',
+    'page callback' => '_page_example',
+    //'page arguments' => array('tcompactmenu_settings'),
+    'access callback' => TRUE,
+    'expanded' => TRUE,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_node_delete().
+ */
+function home_page_node_delete($node) {
+  drupal_set_message(t('Node delete.'), 'error');
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function home_page_node_update($node) {
+  drupal_set_message(t('Node update.'), 'error');
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function home_page_node_insert($node) {
+  drupal_set_message(t('Node insert.'), 'error');
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function home_page_user_delete(&$edit, $account, $category) {
+  drupal_set_message(t('User delete.'), 'error');
+}
+
+/**
+ * Implements hook_user_update().
+ */
+function home_page_user_update(&$edit, $account, $category) {
+  drupal_set_message(t('User update.'), 'error');
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function home_page_user_insert(&$edit, $account, $category) {
+  drupal_set_message(t('User insert.'), 'error');
+}

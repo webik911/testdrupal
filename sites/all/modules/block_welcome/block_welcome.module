@@ -1,0 +1,44 @@
+<?php
+/**
+ * @file
+ * Example module block_welcome.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function block_welcome_permission() {
+  return array(
+    'administer welcome' => array(
+      'title' => t('Welcome'),
+      'description' => t('Allows greet this user.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function block_welcome_block_info() {
+
+  $blocks = array();
+  $blocks[1]['info'] = t('Welcome');
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function block_welcome_block_view($delta = '') {
+  global $user;
+  $block = array();
+  $block['subject'] = t('Welcome');
+  if (user_access('administer welcome')) {
+    $block['content'] = t('Welcome @name!', array('@name' => $user->name));
+  }
+  else {
+    $block['content'] = t('Access to view this content is denied.');
+  }
+
+  return $block;
+}

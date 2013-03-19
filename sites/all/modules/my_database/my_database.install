@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ *   Install file for l10n remote updates.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function my_database_schema() {
+  $schema['custom_table'] = array(
+    'description' => 'My database table.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => FALSE,
+      ),
+      'number' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'teaser' => array(
+        'description' => 'Example textfield.',
+        'type' => 'varchar',
+        'length' => 150,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'text' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => 'Some timestamp.',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+   
+  return $schema;
+}
+/**
+ * Implements hook_unistall().
+ */
+
+function my_database_uninstall() {
+ //удаляем ноды
+//...
+ //удаляем типы контента
+//...
+//удаляем таблицу
+  drupal_uninstall_schema('custom_table');
+}
